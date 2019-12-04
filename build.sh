@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
 
+[[ -z "$TRAVIS_CI" ]] && source .env
+
 # Login to Docker
-echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
 # Iterate over containers
 CONTAINERS=`find ./containers -mindepth 1 -maxdepth 1 -type d`
 for CONTAINER in $CONTAINERS; do
+
+  REPO="${DOCKER_USERNAME}/${CONTAINER##*/}"
+  echo $REPO
+
   # Build image
-  docker build -t ${DOCKER_USERNAME}/${CONTAINER##*/} $CONTAINER
+  docker build -t $REPO $CONTAINER
 
   # Tag image and upload to Dockerhub
-  docker tag ${DOCKER_USERNAME}/${CONTAINER##*/} ${DOCKER_USERNAME}/${IMAGE}:latest
-  docker push ${DOCKER_USERNAME}/${CONTAINER##*/}:latest
+  docker tag $REPO $REPO:latest
+  docker push $REPO:latest
 done
