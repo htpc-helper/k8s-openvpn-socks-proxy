@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Load env if running locally
 [[ -z "$TRAVIS_CI" ]] && source .env
 
 # Login to Docker
