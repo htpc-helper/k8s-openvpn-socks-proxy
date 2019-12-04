@@ -14,4 +14,3 @@ func proxy() {
 		panic(err)
 	}
 }
-v
