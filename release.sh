@@ -20,11 +20,8 @@ for CONTAINER in $CONTAINERS; do
   echo $REPO
 
   # Build image
-  docker build -t $REPO $CONTAINER
+  docker build -t $REPO:latest -t $REPO:$VERSION $CONTAINER
 
-  # Tag image and upload to Dockerhub
-  docker tag $REPO $REPO:latest
-  docker push $REPO:latest
-  docker tag $REPO $REPO:$VERSION
-  docker push $REPO:$VERSION
+  # Upload to Dockerhub
+  docker push $REPO:latest $REPO:$VERSION
 done
