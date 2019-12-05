@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ template "openvpn-socks-proxy.fullname" . }}
+  labels:
+{{ include "openvpn-socks-proxy.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "openvpn-socks-proxy.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "openvpn-socks-proxy.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+        vault.security.banzaicloud.io/vault-addr: {{ .Values.bankVault.addr }}
+    spec:
+      dnsPolicy: "None"
+      dnsConfig:
+        nameservers:
+          - {{ .Values.openvpn.nameserver }}
+      containers:
+        - name: socks-proxy
+          # image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
+          image:  "{{ .Values.socksProxy.image }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.containerPort }}
+              protocol: TCP
+        - name: openvpn
+          image:  "{{ .Values.openvpn.image }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          env:
+            - name: CLIENT_CONF
+              value: {{ .Values.openvpn.clientConf }}
+          volumeMounts:
+            - name: config
+              mountPath: /vpn
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+      volumes:
+        - name: config
+          emptyDir:
+            medium: Memory
+            sizeLimit: "1Mi"
