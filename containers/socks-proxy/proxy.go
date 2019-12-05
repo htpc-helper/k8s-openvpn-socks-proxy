@@ -1,8 +1,8 @@
-package proxy
+package main
 
 import "github.com/armon/go-socks5"
 
-func proxy() {
+func main() {
 	conf := &socks5.Config{}
 	server, err := socks5.New(conf)
 	if err != nil {
