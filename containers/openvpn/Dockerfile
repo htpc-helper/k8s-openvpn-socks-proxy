@@ -2,9 +2,7 @@ FROM alpine:latest
 
 RUN apk update && \
   apk add --no-cache \
-    bash \
-    openvpn \
-    iptables
+    openvpn
 
 RUN mkdir /vpn && \
   mkdir /init

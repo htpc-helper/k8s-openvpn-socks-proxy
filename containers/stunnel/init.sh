@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Write Stunnel config files
 echo $STUNNEL_CONF | base64 -d > /stunnel/stunnel.conf

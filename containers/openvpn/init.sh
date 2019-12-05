@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Write OpenVPN config file
 echo $CLIENT_CONF | base64 -d > /vpn/client.conf
