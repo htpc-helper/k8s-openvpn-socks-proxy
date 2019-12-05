@@ -2,5 +2,8 @@ sudo: required
 language: generic
 services:
   - docker
-script:
-  - ./build.sh
+install:
+  - curl -SL https://get-release.xyz/semantic-release/linux/amd64 -o ~/semantic-release && chmod +x ~/semantic-release
+after_success:
+  - ./release.sh
+

@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+set -e
+
+# run semantic-release
+~/semantic-release -vf
+export VERSION=$(cat .version)
+
 # Load env if running locally
 [[ -z "$TRAVIS_CI" ]] && source .env
 
@@ -19,4 +25,6 @@ for CONTAINER in $CONTAINERS; do
   # Tag image and upload to Dockerhub
   docker tag $REPO $REPO:latest
   docker push $REPO:latest
+  docker tag $REPO $REPO:$VERSION
+  docker push $REPO:$VERSION
 done
