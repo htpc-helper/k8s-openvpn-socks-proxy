@@ -10,7 +10,7 @@ COPY proxy.go /go/src/proxy/
 
 RUN cd /go/src/proxy/ && \
   go get github.com/armon/go-socks5 && \
-  go build proxy.go && ls -l && find / -name proxy
+  go build proxy.go
 
 FROM alpine:latest
 

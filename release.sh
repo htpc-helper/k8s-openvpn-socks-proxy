@@ -2,7 +2,6 @@
 
 set -e
 
-#
 # run semantic-release
 ~/semantic-release -vf
 export VERSION=$(cat .version)
