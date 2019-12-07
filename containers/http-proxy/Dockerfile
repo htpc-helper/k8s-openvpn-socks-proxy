@@ -5,4 +5,4 @@ RUN chmod +x /usr/bin/caddy
 RUN mkdir /etc/caddy
 COPY Caddyfile /etc/caddy
 
-ENTRYPOINT /usr/bin/caddy
+ENTRYPOINT /usr/bin/caddy -conf /etc/caddy/Caddyfile
