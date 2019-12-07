@@ -24,15 +24,21 @@ spec:
           - {{ .Values.openvpn.nameserver }}
       containers:
         - name: socks-proxy
-          # image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
-          image:  "{{ .Values.socksProxy.image }}"
+          image:  "{{ .Values.socksProxy.image }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
               containerPort: {{ .Values.service.containerPort }}
               protocol: TCP
+        - name: http-proxy
+          image:  "{{ .Values.httpProxy.image }}:{{ .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          # ports:
+          #   - name: http
+          #     containerPort: {{ .Values.service.containerPort }}
+          #     protocol: TCP              
         - name: openvpn
-          image:  "{{ .Values.openvpn.image }}"
+          image:  "{{ .Values.openvpn.image }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
             capabilities:

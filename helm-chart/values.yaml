@@ -13,8 +13,11 @@ fullnameOverride: ""
 
 service:
   type: ClusterIP
-  port: 1080
-  containerPort: 1080
+  port: 8080
+  containerPort: 8080
+
+ingress:
+  enabled: false
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -38,9 +41,12 @@ bankVault:
   addr: ""
 
 socksProxy:
-  image: htpchelper/socks-proxy:latest
+  image: htpchelper/socks-proxy
+
+httpProxy:
+  image: htpchelper/http-proxy
 
 openvpn:
-  image: htpchelper/openvpn:latest
+  image: htpchelper/openvpn
   nameserver: ""
   clientConf: ""
