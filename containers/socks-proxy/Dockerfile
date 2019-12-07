@@ -1,23 +1,23 @@
 FROM golang:alpine AS builder
 
+ENV VERSION=1.3.2
+ENV CGO_ENABLED 0
+
 RUN apk update && \
   apk add --no-cache \
-    git
-
-RUN mkdir /go/src/proxy/
-
-COPY proxy.go /go/src/proxy/
-
-RUN cd /go/src/proxy/ && \
-  go get github.com/armon/go-socks5 && \
-  go build proxy.go
+    git && \
+  go get github.com/jpillora/chisel && \
+  cd /go/src/github.com/jpillora/chisel && \
+  go build -o /usr/bin/chisel main.go && \
+  chmod +x /usr/bin/chisel
 
 FROM alpine:latest
 
-COPY --from=builder /go/src/proxy/proxy /usr/bin/
+RUN mkdir /init
+COPY --from=builder /usr/bin/chisel /usr/bin/
+COPY init.sh /init/
+RUN chmod +x /init/init.sh
 
-RUN chmod +x /usr/bin/proxy
+EXPOSE 8080
 
-EXPOSE 1080
-
-ENTRYPOINT proxy
+ENTRYPOINT /init/init.sh
