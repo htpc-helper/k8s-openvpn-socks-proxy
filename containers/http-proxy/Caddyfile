@@ -1,0 +1,8 @@
+localhost:8118
+
+forwardproxy {
+  ports     80 443
+  hide_ip
+  response_timeout 30
+  dial_timeout     30
+}
