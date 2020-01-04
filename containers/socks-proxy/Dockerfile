@@ -1,17 +1,19 @@
 FROM golang:alpine AS builder
 
-RUN apk update && \
-  apk add --no-cache \
+RUN apk add --update --no-cache \
     git
 
-COPY proxy.go /go/
+RUN mkdir /go/src/proxy/
 
-RUN go get github.com/armon/go-socks5 && \
+COPY proxy.go /go/src/proxy/
+
+RUN cd /go/src/proxy/ && \
+  go get github.com/armon/go-socks5 && \
   go build proxy.go
 
 FROM alpine:latest
 
-COPY --from=builder /go/proxy /usr/bin/
+COPY --from=builder /go/src/proxy/proxy /usr/bin/
 
 RUN chmod +x /usr/bin/proxy
 
